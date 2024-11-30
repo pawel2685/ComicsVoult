@@ -1,3 +1,4 @@
+
 # Gradle files
 .gradle/
 build/
@@ -57,5 +58,3 @@ proguard/
 
 # Windows system files
 Thumbs.db
-
-
