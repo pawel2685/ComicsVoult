@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,15 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("com.google.dagger.hilt.android")
 }
+
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties()
+apikeyProperties.load(apikeyPropertiesFile.inputStream())
+
+fun getApiKey(key: String): String {
+    return apikeyProperties.getProperty(key) ?: throw GradleException("Key $key not found in apikey.properties")
+}
+
 
 android {
     namespace = "com.wsb.comicsvoult"
@@ -18,6 +29,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "MARVEL_KEY", "\"${getApiKey("MARVEL_KEY")}\"")
+        buildConfigField("String", "MARVEL_SECRET", "\"${getApiKey("MARVEL_SECRET")}\"")
+    }
+
+    buildFeatures {
+        buildConfig = true // Enable BuildConfig generation
     }
 
     buildTypes {
