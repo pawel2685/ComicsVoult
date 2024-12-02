@@ -76,11 +76,13 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    implementation(platform("androidx.compose:compose-bom:2023.10.00"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    // Debugging Tools for Compose
+    debugImplementation("androidx.compose.ui:ui-tooling")
 
     // Coroutines and Flow
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
@@ -95,20 +97,17 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
 
     // Hilt DI
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-compiler:2.47")
 
-    // Network Connectivity Monitor
-    implementation(libs.androidx.lifecycle.runtime.ktx.v261) // For lifecycle-aware components
-    implementation("androidx.work:work-runtime-ktx:2.10.0") // For periodic checks
-    implementation(libs.androidx.core.ktx.v1120) // For core system services
+    // WorkManager for periodic background tasks
+    implementation("androidx.work:work-runtime-ktx:2.10.0")
 
     // Test dependencies
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
