@@ -1,8 +1,10 @@
 package com.wsb.comicsvoult
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
@@ -20,6 +22,9 @@ import com.wsb.comicsvoult.ui.theme.ComicsVoultTheme
 import com.wsb.comicsvoult.view.CharactersBottomNav
 import com.wsb.comicsvoult.view.CollectionScreen
 import com.wsb.comicsvoult.view.LibraryScreen
+import com.wsb.comicsvoult.viewmodel.LibraryApiViewModel
+import java.math.BigInteger
+import java.security.MessageDigest
 
 sealed class Destination(val route: String) {
     object Library : Destination("library")
@@ -31,6 +36,9 @@ sealed class Destination(val route: String) {
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val lvm by viewModels<LibraryApiViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -40,15 +48,46 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    CharactersScaffold(navController = navController)
+                    CharactersScaffold(navController = navController, lvm)
                 }
             }
         }
+        logMarvelApiDetails()
+    }
+    // Function to generate MD5 hash and log the full URL
+    private fun logMarvelApiDetails() {
+        // Example usage (replace with your actual Marvel API keys)
+        val ts = System.currentTimeMillis().toString()  // Generate timestamp
+        val apiSecret = BuildConfig.MARVEL_SECRET        // Replace with your private key
+        val apiKey = BuildConfig.MARVEL_KEY             // Replace with your public key
+
+        // Generate the hash
+        val hash = getHash(ts, apiSecret, apiKey)
+
+        // Construct the full URL for the API request
+        val url = "http://gateway.marvel.com/v1/public/characters" +
+                "?ts=$ts" +
+                "&apikey=$apiKey" +
+                "&hash=$hash" +
+                "&nameStartsWith=Hulk"  // Example query, change it as needed
+
+        // Log the URL to Logcat
+        Log.d("MarvelAPI", "Generated URL: $url")
+    }
+
+    // Function to generate the MD5 hash
+    private fun getHash(timestamp: String, privateKey: String, publicKey: String): String {
+        val hashStr = timestamp + privateKey + publicKey
+        val md = MessageDigest.getInstance("MD5")
+        return BigInteger(1, md.digest(hashStr.toByteArray()))
+            .toString(16)
+            .padStart(32, '0')
     }
 }
 
+
 @Composable
-fun CharactersScaffold(navController: NavHostController) {
+fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewModel) {
     val scaffoldState = rememberScaffoldState()
 
     Scaffold(
@@ -65,7 +104,7 @@ fun CharactersScaffold(navController: NavHostController) {
             modifier = Modifier.padding(paddingValues)
         ) {
             composable(Destination.Library.route) {
-                LibraryScreen()
+                LibraryScreen(navController, lvm, paddingValues)
             }
             composable(Destination.Collection.route) {
                 CollectionScreen()

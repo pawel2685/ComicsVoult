@@ -2,7 +2,6 @@ package com.wsb.comicsvoult.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.room.Query
 import com.wsb.comicsvoult.model.api.MarvelApiRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
