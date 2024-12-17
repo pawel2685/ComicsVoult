@@ -1,6 +1,5 @@
 package com.wsb.comicsvoult
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -14,11 +13,10 @@ import coil.compose.AsyncImage
 
 
 fun getHash(timestamp: String, privateKey: String, publicKey: String): String {
-    val hashStr = timestamp + privateKey + publicKey
+    val hashInput = "$timestamp$privateKey$publicKey"
     val md = MessageDigest.getInstance("MD5")
-    return BigInteger(1, md.digest(hashStr.toByteArray()))
-        .toString(16)
-        .padStart(32,'0')
+    val hashBytes = md.digest(hashInput.toByteArray(Charsets.UTF_8))
+    return hashBytes.joinToString("") { "%02x".format(it) }
 }
 
 @Composable
