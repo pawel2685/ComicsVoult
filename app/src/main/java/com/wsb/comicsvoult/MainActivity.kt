@@ -2,6 +2,7 @@ package com.wsb.comicsvoult
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -19,6 +21,7 @@ import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 
 import com.wsb.comicsvoult.ui.theme.ComicsVoultTheme
+import com.wsb.comicsvoult.view.CharacterDetailScreen
 import com.wsb.comicsvoult.view.CharactersBottomNav
 import com.wsb.comicsvoult.view.CollectionScreen
 import com.wsb.comicsvoult.view.LibraryScreen
@@ -89,6 +92,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewModel) {
     val scaffoldState = rememberScaffoldState()
+    val ctx = LocalContext.current
 
     Scaffold(
         scaffoldState = scaffoldState,
@@ -113,6 +117,17 @@ fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewMode
                 route = Destination.CharacterDetail.route,
                 arguments = listOf(navArgument("characterId") { type = NavType.StringType })
             ) { navBackStackEntry ->
+                val id = navBackStackEntry.arguments?.getString("characterId")?.toIntOrNull()
+                if(id == null)
+                    Toast.makeText(ctx, "Character id is required", Toast.LENGTH_SHORT).show()
+                else {
+                    lvm.retrieveSingleCharacter(id)
+                    CharacterDetailScreen(
+                        lvm = lvm,
+                        paddingValues = paddingValues,
+                        navController = navController
+                    )
+                }
             }
         }
     }
