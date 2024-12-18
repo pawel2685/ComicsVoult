@@ -113,7 +113,7 @@ fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewMode
                 LibraryScreen(navController, lvm, paddingValues)
             }
             composable(Destination.Collection.route) {
-                CollectionScreen()
+                CollectionScreen(cvm, navController)
             }
             composable(
                 route = Destination.CharacterDetail.route,
