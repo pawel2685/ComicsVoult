@@ -25,6 +25,7 @@ import com.wsb.comicsvoult.view.CharacterDetailScreen
 import com.wsb.comicsvoult.view.CharactersBottomNav
 import com.wsb.comicsvoult.view.CollectionScreen
 import com.wsb.comicsvoult.view.LibraryScreen
+import com.wsb.comicsvoult.viewmodel.CollectionDbViewModel
 import com.wsb.comicsvoult.viewmodel.LibraryApiViewModel
 import java.math.BigInteger
 import java.security.MessageDigest
@@ -41,6 +42,7 @@ sealed class Destination(val route: String) {
 class MainActivity : ComponentActivity() {
 
     private val lvm by viewModels<LibraryApiViewModel>()
+    private val cvm by viewModels<CollectionDbViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +53,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     val navController = rememberNavController()
-                    CharactersScaffold(navController = navController, lvm)
+                    CharactersScaffold(navController = navController, lvm, cvm)
                 }
             }
         }
@@ -90,7 +92,7 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewModel) {
+fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewModel, cvm: CollectionDbViewModel) {
     val scaffoldState = rememberScaffoldState()
     val ctx = LocalContext.current
 
@@ -124,6 +126,7 @@ fun CharactersScaffold(navController: NavHostController, lvm: LibraryApiViewMode
                     lvm.retrieveSingleCharacter(id)
                     CharacterDetailScreen(
                         lvm = lvm,
+                        cvm = cvm,
                         paddingValues = paddingValues,
                         navController = navController
                     )

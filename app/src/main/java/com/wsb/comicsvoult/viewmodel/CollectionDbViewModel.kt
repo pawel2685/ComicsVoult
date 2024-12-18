@@ -6,6 +6,7 @@ import com.wsb.comicsvoult.model.CharacterResult
 import com.wsb.comicsvoult.model.db.CollectionDbRepo
 import com.wsb.comicsvoult.model.db.DbCharacter
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,13 +39,13 @@ class CollectionDbViewModel @Inject constructor(private val repo: CollectionDbRe
     }
 
     fun addCharacter(character: CharacterResult) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repo.addCharacterToRepo((DbCharacter.fromCharacter(character)))
         }
     }
 
     fun deleteCharacter(character: DbCharacter) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             repo.deleteCharacterFromRepo(character)
         }
     }
