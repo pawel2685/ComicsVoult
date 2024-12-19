@@ -9,7 +9,7 @@ import com.wsb.comicsvoult.model.db.CollectionDb
 import com.wsb.comicsvoult.model.db.CollectionDbRepo
 import com.wsb.comicsvoult.model.db.CollectionDbRepoImpl
 import com.wsb.comicsvoult.model.db.Constants.DB
-import com.wsb.comicsvoult.model.db.DbCharacter
+import com.wsb.comicsvoult.model.db.NoteDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +30,10 @@ class HiltModule() {
     fun providesCharacterDao(collectionDb: CollectionDb) = collectionDb.characterDao()
 
     @Provides
-    fun provideDbRepoImpl(characterDao: CharacterDao): CollectionDbRepo =
-        CollectionDbRepoImpl(characterDao)
+    fun providesNoteDao(collectionDb: CollectionDb) = collectionDb.noteDao()
+
+    @Provides
+    fun provideDbRepoImpl(characterDao: CharacterDao, noteDao: NoteDao): CollectionDbRepo =
+        CollectionDbRepoImpl(characterDao, noteDao)
+
 }
