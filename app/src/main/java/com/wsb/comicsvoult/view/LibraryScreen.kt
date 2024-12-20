@@ -37,6 +37,7 @@ import com.wsb.comicsvoult.CharacterImage
 import com.wsb.comicsvoult.Destination
 import com.wsb.comicsvoult.model.CharactersApiResponse
 import com.wsb.comicsvoult.model.api.NetworkResult
+import com.wsb.comicsvoult.model.connectivity.ConnectivityObservable
 import com.wsb.comicsvoult.viewmodel.LibraryApiViewModel
 
 
@@ -48,6 +49,7 @@ fun LibraryScreen(
 ) {
     val result = vm.result.collectAsState().value
     val text = vm.queryText.collectAsState().value
+    val networkAvailable = vm.networkAvailable.observe().collectAsState(ConnectivityObservable.Status.Available)
 
     Column(
         modifier = Modifier
@@ -55,6 +57,22 @@ fun LibraryScreen(
             .padding(bottom = paddingValues.calculateBottomPadding()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        if (networkAvailable.value == ConnectivityObservable.Status.Unavailable) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Red),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = "Neteork unavailable",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
 
         OutlinedTextField(
             value = text,
