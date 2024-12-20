@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.wsb.comicsvoult.model.db.CollectionDb
 import dagger.hilt.android.AndroidEntryPoint
 
 import com.wsb.comicsvoult.ui.theme.ComicsVoultTheme
@@ -46,6 +47,8 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        CollectionDb.getInstance(this)
+
         setContent {
             ComicsVoultTheme {
                 Surface(

@@ -22,7 +22,8 @@ abstract class CollectionDb: RoomDatabase() {
                     context.applicationContext,
                     CollectionDb::class.java,
                     "collection_db"
-                ).fallbackToDestructiveMigration()  // Add this line
+                )
+                    .fallbackToDestructiveMigration()  // Ensure this line is present
                     .build()
                 INSTANCE = instance
                 instance
